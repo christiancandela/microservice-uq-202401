@@ -1,18 +1,4 @@
-POST http://localhost:8080/login
-Content-Type: application/json
 
-{
-  "username": "prueba",
-  "password": "12345"
-}
-> {% client.global.set("auth_token", response.body.trim()); %}
-###
-
-GET http://localhost:8080/hello/all
-Authorization: Bearer {{auth_token}}
-###
-
-GET http://localhost:8080/hello/secured
+GET http://localhost:8080/hello
 Content-Type: */*
-Authorization: Bearer {{auth_token}}
 ###
