@@ -6,7 +6,7 @@ Feature: Yo como usuario
     Given Soy un usuario no registrado
     And proporciono los datos de registro
     When invoco el servicio de registro
-    Then obtengo un status code 200
+    Then obtengo un status code 201
     And mis datos registrados
 
   Scenario Outline: Validación de campos requeridos en el registro
