@@ -58,9 +58,9 @@ public class RegisterStepdefs {
 
     @And("proporciono los datos de registro omitiendo el {string}")
     public void proporcionoLosDatosDeRegistroOmitiendoEl(String campo) {
-        if("username".equals(campo)){
+        if("usuario".equals(campo)){
             userBuilder.username(null);
-        } else if ("password".equals(campo)) {
+        } else if ("clave".equals(campo)) {
             userBuilder.password(null);
         }
     }
