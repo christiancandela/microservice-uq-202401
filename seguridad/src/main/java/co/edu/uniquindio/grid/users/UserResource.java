@@ -1,21 +1,28 @@
 package co.edu.uniquindio.grid.users;
 
 import co.edu.uniquindio.grid.users.dto.UserView;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-@ApplicationScoped
+@RunOnVirtualThread
 @Path("/users")
 public class UserResource {
 
     private final UserRepository repository;
+
+    public UserResource() {
+        repository = null;
+    }
 
     @Inject
     public UserResource(UserRepository repository) {
@@ -25,8 +32,13 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @PermitAll
-    public User register(UserView userView) {
-        return repository.save(userView.toUser());
+    public Response register(@Valid UserView userView,@Context UriInfo uriInfo) {
+        var user = repository.save(userView.toUser());
+        var urlNewUserResource = uriInfo.getAbsolutePathBuilder().path(user.getUsername()).build();
+        return Response
+                .created(urlNewUserResource)
+                .entity(user)
+                .build();
     }
 
     @GET
@@ -54,10 +66,10 @@ public class UserResource {
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "user"})
-    public User delete(@PathParam("username") String username) {
+    public Response delete(@PathParam("username") String username) {
         var user = find(username);
         repository.delete( user );
-        return user;
+        return Response.noContent().build();
     }
 
     @PUT
