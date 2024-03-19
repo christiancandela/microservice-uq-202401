@@ -10,7 +10,7 @@ services:
 
   secured_service:
     build:
-      dockerfile: src/main/docker/Dockerfile.native-micro
+      dockerfile: src/main/docker/Dockerfile.jvm
       context: seguridad
     container_name: seguridad_container
     depends_on:
