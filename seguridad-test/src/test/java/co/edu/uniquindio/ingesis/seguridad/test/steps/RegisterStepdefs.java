@@ -1,5 +1,6 @@
 package co.edu.uniquindio.ingesis.seguridad.test.steps;
 
+import co.edu.uniquindio.ingesis.seguridad.test.dtos.Error;
 import co.edu.uniquindio.ingesis.seguridad.test.dtos.User;
 import co.edu.uniquindio.ingesis.seguridad.test.utils.DataGenerator;
 import io.cucumber.java.en.And;
@@ -67,7 +68,10 @@ public class RegisterStepdefs {
 
     @And("un mensaje que indica que el {string}")
     public void unMensajeQueIndicaQueEl(String mensaje) {
-        var errores = response.then().extract().body().asString();
-        assertTrue(errores.contains(mensaje));
+        Error[] errores = response.then()
+                .body("error",response->notNullValue())
+                .body("error", hasItems(mensaje))
+                .extract().body().as(Error[].class);
+        assertTrue(errores.length>0);
     }
 }
